@@ -1,0 +1,213 @@
+<div class="container">
+    <mat-accordion class="venta-headers-align">
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Cliente&nbsp;<span class="alert-message">{{mensaje}}</span>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{titulocliente}}
+                    <mat-icon>account_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-grid-list cols="2" rowHeight="70px">
+                <mat-grid-tile>
+                    <mat-form-field class="venta-full-width">
+                        <mat-label>Numero Indentificaci&oacute;n</mat-label>
+                        <input matInput type="number" [(ngModel)]="identificacion">
+                        <button mat-button *ngIf="identificacion > 0" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="identificacion=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button mat-raised-button color="accent" (click)="searchCliente()">Buscar cliente</button>
+                </mat-grid-tile>
+                <mat-grid-tile *ngIf="cliente" [colspan]="2" [rowspan]="1">
+                    <div class="venta-info-cliente mat-elevation-z5">
+                        <p>IDENTIFICAION : {{identificacion}}</p>
+                        <p>NOMBRE : {{cliente.nombres}}</p>
+                        <p>APELLIDO: {{cliente.apellidos}}</p>
+                    </div>
+                    <div class="venta-info-cliente mat-elevation-z5">
+                        <p>DIRECCION: {{cliente.direccion}}</p>
+                        <p>TELEFONO : {{cliente.telefono}}</p>
+                        <p>EMAIL: {{cliente.email}}</p>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+
+            <mat-action-row>
+                <button mat-button color="primary" (click)="nextStep()">Agregar Productos</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Producto&nbsp;<span class="alert-message">{{mensaje}}</span>
+                </mat-panel-title>
+                <mat-panel-description>
+                    Agregue productos al carrito
+                    <mat-icon>map</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-grid-list cols="2" rowHeight="70px">
+                <mat-grid-tile>
+                    <mat-form-field class="venta-full-width">
+                        <mat-label>C&oacute;digo de producto</mat-label>
+                        <input matInput type="text" [(ngModel)]="codigo">
+                        <button mat-button matSuffix mat-flat-button aria-label="Clear"
+                            (click)="searchProductoCodigo()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-form-field class="venta-full-width">
+                        <mat-label>Nombre de producto</mat-label>
+                        <input matInput type="text" [(ngModel)]="nombre">
+                        <button mat-button matSuffix mat-flat-button aria-label="Clear"
+                            (click)="searchProductoNombre()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </mat-grid-tile>
+
+            </mat-grid-list>
+            <div *ngIf="productos.length > 0">
+                <table mat-table [dataSource]="productos" class="mat-elevation-z1">
+                    <!-- Item Column -->
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                        <td mat-cell *matCellDef="let producto"> {{producto.codigo}} </td>
+                    </ng-container>
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                        <td mat-cell *matCellDef="let producto"> {{producto.nombre}} </td>
+                    </ng-container>
+                    <!-- Stock Column -->
+                    <ng-container matColumnDef="stock">
+                        <th mat-header-cell *matHeaderCellDef> Disponible</th>
+                        <td mat-cell *matCellDef="let producto"> {{producto.stock}} </td>
+                        <td mat-footer-cell *matFooterCellDef> </td>
+                    </ng-container>
+                    <!-- Quantity Column -->
+                    <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                        <td mat-cell *matCellDef="let producto">
+                            <mat-form-field>
+                                <input matInput type="number" [(ngModel)]="producto.cantidad">
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+                    <!-- Unit Column -->
+                    <ng-container matColumnDef="valorUnidad">
+                        <th mat-header-cell *matHeaderCellDef> Valor Unidad</th>
+                        <td mat-cell *matCellDef="let producto"> {{producto.valorUnidad | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> </td>
+                    </ng-container>
+
+                    <!-- Button Column -->
+                    <ng-container matColumnDef="accion">
+                        <th mat-header-cell *matHeaderCellDef> Añadir </th>
+                        <td mat-cell *matCellDef="let producto">
+                            <button mat-button mat-icon-button color="accent" *ngIf="(producto.stock-producto.cantidad) >= 0"
+                                (click)="addProdcutoDetalle(producto)">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <span *ngIf="(producto.stock-producto.cantidad) < 0" class="alert-message">No hay disponibilidad</span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPro"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPro;"></tr>
+
+                </table>
+            </div>
+            <mat-action-row>
+                <button mat-button color="warn" (click)="prevStep()">Editar Cliente</button>
+                <button mat-button color="primary" (click)="nextStep()">Comfirmar Pedido</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Factura
+                </mat-panel-title>
+                <mat-panel-description>
+                    Confirme sus pedidos y registre la venta
+                    <mat-icon>date_range</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <table mat-table [dataSource]="detalles" class="mat-elevation-z1">
+
+                <!-- Item Column -->
+                <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                    <td mat-cell *matCellDef="let detalle"> {{detalle.producto.codigo}} </td>
+                    <td mat-footer-cell *matFooterCellDef>Total</td>
+                </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                    <td mat-cell *matCellDef="let detalle"> {{detalle.producto.nombre}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <!-- Quantity Column -->
+                <ng-container matColumnDef="cantidad">
+                    <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                    <td mat-cell *matCellDef="let detalle">
+                        <mat-form-field>
+                            <input matInput type="number" (change)="onQuantityChange(detalle)"
+                                [(ngModel)]="detalle.cantidad">
+                        </mat-form-field>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <!-- Unit Column -->
+                <ng-container matColumnDef="valorUnidad">
+                    <th mat-header-cell *matHeaderCellDef> Valor valorUnidad</th>
+                    <td mat-cell *matCellDef="let detalle"> {{detalle.valorUnidad | currency}} </td>
+                    <td mat-footer-cell *matFooterCellDef> </td>
+                </ng-container>
+
+                <!-- Cost Column -->
+                <ng-container matColumnDef="valorTotal">
+                    <th mat-header-cell *matHeaderCellDef> Valor Total </th>
+                    <td mat-cell *matCellDef="let detalle"> {{detalle.valorTotal | currency}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{getTotalCost() | currency}} </td>
+                </ng-container>
+
+                <!-- Button Column -->
+                <ng-container matColumnDef="accion">
+                    <th mat-header-cell *matHeaderCellDef> Retirar </th>
+                    <td mat-cell *matCellDef="let detalle">
+                        <button mat-button mat-icon-button (click)="removeProdcutoDetalle(detalle.producto.codigo)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsFac"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsFac;"></tr>
+                <tr mat-footer-row *matFooterRowDef="displayedColumnsFac"></tr>
+            </table>
+
+
+            <mat-action-row>
+                <button mat-button color="warn" (click)="prevStep()">Agregar mas productos</button>
+                <button mat-button color="primary" (click)="submitFactura()">Guardar Pedido</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</div>

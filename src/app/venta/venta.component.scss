@@ -1,0 +1,69 @@
+.venta-headers-align .mat-expansion-panel-header-title,
+.venta-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.venta-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.venta-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+.venta-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.venta-full-width {
+  width: 100%;
+  margin: 12px;
+}
+
+.venta-info-cliente {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin: 5px;
+  padding-left: 5px;
+  p {
+    margin: 0px;
+  }
+}
+
+.venta-add {
+  width: 100px;
+  height: 100px;
+}
+
+.venta-lista {
+  width: 100px;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+table {
+  width: 100%;
+}
+
+tr.mat-footer-row {
+  font-weight: bold;
+}
+
+.container {
+  margin: 50px;
+}
+
+.alert-message{
+  color: red;
+  font-weight: 100;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    margin: 5px;
+  }
+}

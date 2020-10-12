@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>{{data.accion}} Cliente</h1>
+<div mat-dialog-content>
+
+    <div style="display: flex;flex-direction: column; margin:1rem auto; max-width: 600px; padding: 1rem;">
+
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.identificacion" type="text" placeholder="Ingrese Identificación">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.nombres" type="text" placeholder="Ingrese nombre">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.apellidos" type="text" placeholder="Ingrese apellidos">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.direccion" type="text" placeholder="Ingrese Direccion">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.telefono" type="text" placeholder="Ingrese Telefono">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.email" type="text" placeholder="Ingrese Correo">
+        </mat-form-field>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Guardar</button>
+</div>
